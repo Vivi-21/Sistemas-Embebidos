@@ -1,0 +1,136 @@
+/*
+ * UTN/FICA/CITEL
+ * Nombre: Viviana Yucailla
+ * 
+ * CAPÍTULO 2: PUERTOS DIGITALES
+ * CÓDIGO DEBER N°2: Manejo de puertos digitales configurados como salida.
+ * OBJETIVO: Realizar un programa que al presionar el pulsador cada vez, se visualiza a cada número primo hasta el 99. 
+ * FUNCIONES: 1° PinMode(pin, MODO)
+ *                            MODO--> INPUT/OUTPUT
+ *            2° DigitalWrite(pin,ESTADO)
+ *                            ESTADO--> HIGH, LOW
+ *            3° delay (ms)
+ *                      ms--> tiempo en milisegundos
+ * 
+ */
+
+const int A=8; // decodificador //variable constante (recomendable)
+const int B=9; // decodificador //variable constante (recomendable)
+const int C=10; // decodificador //variable constante (recomendable)
+const int D=11; // decodificador //variable constante (recomendable)
+const int btn=7;
+int cont=1;
+int unidades=12; // pin de activación
+int decenas=13; // pin de activación
+int dec; // variable decenas
+int uni; // variable unidades
+int i; // variable para ciclo for
+bool numprimo; // tiene uno de dos valores, trueo false. (Cada variable  bool ocupa un byte de memoria).
+
+void setup() {
+  pinMode(A,OUTPUT);
+  pinMode(B,OUTPUT);
+  pinMode(C,OUTPUT);
+  pinMode(D,OUTPUT);
+  pinMode(btn,INPUT);
+  pinMode(unidades,OUTPUT);
+  pinMode(decenas,OUTPUT);
+}
+
+void loop() {
+  if (digitalRead (btn)==HIGH){
+  delay(300);
+ // condiciones para evaluar los números primos y arrojar true cuando se halle un primo.
+    cont++;
+    numprimo = true;
+    for (i=2; i<cont; i++){
+    if (cont%i == 0){
+    numprimo = false;}
+   //al encontrar un primo, se descompone en decenas y unidades
+        }if(numprimo){
+        if(cont<10){
+          uni = cont;
+          dec = 0;
+        }
+        else{
+          dec = cont/10;
+          uni = cont - dec*10;
+        }                  
+    }
+      digitalWrite(decenas,HIGH);
+      digitalWrite(unidades,LOW);
+      contador(dec); //Imprimir valor de decenas
+      delay(500);
+      digitalWrite(decenas,LOW);
+      digitalWrite(unidades,HIGH);
+      contador(uni); //Imprimir valor de unidades
+      delay(500);
+  }
+}
+//Metodo para representación en el display
+void contador(int i){
+  
+  switch(i){
+   case 0:
+        digitalWrite(A,LOW);
+        digitalWrite(B,LOW);
+        digitalWrite(C,LOW);
+        digitalWrite(D,LOW);
+      break;
+      case 1:
+        digitalWrite(A,HIGH);
+        digitalWrite(B,LOW);
+        digitalWrite(C,LOW);
+        digitalWrite(D,LOW);
+      break;
+      case 2:
+        digitalWrite(A,LOW);
+        digitalWrite(B,HIGH);
+        digitalWrite(C,LOW);
+        digitalWrite(D,LOW);
+      break;
+      case 3:
+        digitalWrite(A,HIGH);
+        digitalWrite(B,HIGH);
+        digitalWrite(C,LOW);
+        digitalWrite(D,LOW);
+      break;
+      case 4:
+        digitalWrite(A,LOW);
+        digitalWrite(B,LOW);
+        digitalWrite(C,HIGH);
+        digitalWrite(D,LOW);
+      break;
+      case 5:
+        digitalWrite(A,HIGH);
+        digitalWrite(B,LOW);
+        digitalWrite(C,HIGH);
+        digitalWrite(D,LOW);
+      break;
+      case 6:
+        digitalWrite(A,LOW);
+        digitalWrite(B,HIGH);
+        digitalWrite(C,HIGH);
+        digitalWrite(D,LOW);
+      break;
+      case 7:
+        digitalWrite(A,HIGH);
+        digitalWrite(B,HIGH);
+        digitalWrite(C,HIGH);
+        digitalWrite(D,LOW);
+      break;
+      case 8:
+        digitalWrite(A,LOW);
+        digitalWrite(B,LOW);
+        digitalWrite(C,LOW);
+        digitalWrite(D,HIGH);
+      break;
+      case 9:
+        digitalWrite(A,HIGH);
+        digitalWrite(B,LOW);
+        digitalWrite(C,LOW);
+        digitalWrite(D,HIGH);
+      break;
+ 
+  }
+}
