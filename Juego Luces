@@ -1,0 +1,187 @@
+/*
+ * UTN/FICA/CITEL
+ * Nombre: Viviana Yucailla
+ * 
+ * CAPÍTULO 2: PUERTOS DIGITALES
+ * CÓDIGO DEBER N°1: Manejo de puertos digitales configurados como salida.
+ * OBJETIVO: Realizar un programa que accione mediante 4 switchs a un juego de luces diferente. Es decir.
+
+sw3   sw2  sw1  sw0
+
+ 0     0    0    1            Juego 1
+
+ 0     0    1    0            Juego 2
+
+ 0     1    0    0            Juego 3
+
+ 1     0    0    0            Juego 4
+
+Juego #1: Se usan 6 leds, de los cuales se encienden los pares por 10 ocasiones
+
+Juego #2: Se usan 6 leds, de los cuales se encienden los impartes por 10 ocasiones
+
+Juego #3: Se encienden secuencialmente cada uno ellos (flexible a su criterio)
+
+Juego #4: Su propio diseño de juego. 
+
+ * FUNCIONES: 1° PinMode(pin, MODO)
+ *                            MODO--> INPUT/OUTPUT
+ *            2° DigitalWrite(pin,ESTADO)
+ *                            ESTADO--> HIGH, LOW
+ *            3° delay (ms)
+ *                      ms--> tiempo en milisegundos
+ * 
+ */
+
+
+ 
+ const int led1=8; //variable constante (recomendable)
+ const int led2=9; //variable constante (recomendable)
+ const int led3=10; //variable constante (recomendable)
+ const int led4=11; //variable constante (recomendable)
+ const int led5=12; //variable constante (recomendable)
+ const int led6=13; //variable constante (recomendable)
+ #define sw0=4; //variable estática
+ #define sw1=5; //variable estática
+ #define sw2=6; //variable estática
+ #define sw3=7; //variable estática
+
+int i; // variable normal
+ 
+void setup() {
+  pinMode(led1,OUTPUT); //pin 8 como salida
+  pinMode(led2,OUTPUT); //pin 9 como salida
+  pinMode(led3,OUTPUT); //pin 10 como salida
+  pinMode(led4,OUTPUT); //pin 11 como salida
+  pinMode(led5,OUTPUT); //pin 12 como salida
+  pinMode(led6,OUTPUT); //pin 13 como salida
+  pinMode(sw0,INPUT); //pin 4 como entrada
+  pinMode(sw1,INPUT); //pin 5 como entrada
+  pinMode(sw2,INPUT); //pin 6 como entrada
+  pinMode(sw3,INPUT); //pin 7 como entrada
+
+}
+
+void loop() {
+  // 0     0    0    1    -----> Juego 1
+    if(digitalRead(sw0)==HIGH && digitalRead(sw1)==LOW && digitalRead(sw2)==LOW && digitalRead(sw3)==LOW){
+      for(i=0;i<10;i++){
+      digitalWrite(led2,HIGH);
+      digitalWrite(led4,HIGH);;
+      digitalWrite(led6,HIGH);
+      delay(500);
+      digitalWrite(led2,LOW);
+      digitalWrite(led4,LOW);;
+      digitalWrite(led6,LOW);
+      delay(500);
+      }
+  }
+  else{
+    digitalWrite(led1,LOW);
+    digitalWrite(led2,LOW);
+    digitalWrite(led3,LOW);
+    digitalWrite(led4,LOW);
+  }
+  // 0     0    1    0       ------> Juego 2
+    if(digitalRead(sw0)==LOW && digitalRead(sw1)==HIGH && digitalRead(sw2)==LOW && digitalRead(sw3)==LOW){
+      for(i=0;i<10;i++){
+      digitalWrite(led1,HIGH);
+      digitalWrite(led3,HIGH);
+      digitalWrite(led5,HIGH);
+      delay(500);
+      digitalWrite(led1,LOW);
+      digitalWrite(led3,LOW);;
+      digitalWrite(led5,LOW);
+      delay(500);
+      }
+  }
+  else{
+    digitalWrite(led1,LOW);
+    digitalWrite(led2,LOW);
+    digitalWrite(led3,LOW);
+    digitalWrite(led4,LOW);
+    digitalWrite(led5,LOW);
+    digitalWrite(led6,LOW);  
+  }
+
+  // 0     1    0    0       ------> Juego 3
+  if(digitalRead(sw0)==LOW && digitalRead(sw1)==LOW && digitalRead(sw2)==HIGH && digitalRead(sw3)==LOW){
+      digitalWrite(led6,HIGH);
+      delay(500);
+      digitalWrite(led6,LOW);
+      delay(500);
+      digitalWrite(led5,HIGH);
+      delay(500);
+      digitalWrite(led5,LOW);
+      delay(500);
+      digitalWrite(led4,HIGH);
+      delay(500);
+      digitalWrite(led4,LOW);
+      delay(500);
+      digitalWrite(led3,HIGH);
+      delay(500);
+      digitalWrite(led3,LOW);
+      delay(500);
+      digitalWrite(led2,HIGH);
+      delay(500);
+      digitalWrite(led2,LOW);
+      delay(500);
+      digitalWrite(led1,HIGH);
+      delay(500);
+      digitalWrite(led1,LOW);
+      delay(500); 
+  }
+    else{
+    digitalWrite(led6,LOW);
+    digitalWrite(led5,LOW);
+    digitalWrite(led4,LOW);
+    digitalWrite(led3,LOW);
+    digitalWrite(led2,LOW);
+    digitalWrite(led1,LOW);  
+  }
+  //  1     0    0    0     -------> Juego 4
+  if(digitalRead(sw0)==LOW && digitalRead(sw1)==LOW && digitalRead(sw2)==LOW && digitalRead(sw3)==HIGH){
+    for(i=0;i<10;i++){
+      digitalWrite(led1,HIGH);
+      digitalWrite(led3,HIGH);;
+      digitalWrite(led5,HIGH);
+      delay(500);
+      digitalWrite(led1,LOW);
+      digitalWrite(led3,LOW);;
+      digitalWrite(led5,LOW);
+      delay(500);
+      digitalWrite(led2,HIGH);
+      digitalWrite(led4,HIGH);
+      digitalWrite(led6,HIGH);
+      delay(500);
+      digitalWrite(led2,LOW);
+      digitalWrite(led4,LOW);;
+      digitalWrite(led6,LOW);
+      delay(500);
+      digitalWrite(led2,HIGH);
+      digitalWrite(led4,HIGH);;
+      digitalWrite(led6,HIGH);
+      delay(500);
+      digitalWrite(led2,LOW);
+      digitalWrite(led4,LOW);;
+      digitalWrite(led6,LOW);
+      delay(500);
+      digitalWrite(led1,HIGH);
+      digitalWrite(led3,HIGH);
+      digitalWrite(led5,HIGH);
+      delay(500);
+      digitalWrite(led1,LOW);
+      digitalWrite(led3,LOW);;
+      digitalWrite(led5,LOW);
+      delay(500);
+      }
+  }
+  else{
+    digitalWrite(led1,LOW);
+    digitalWrite(led2,LOW);
+    digitalWrite(led3,LOW);
+    digitalWrite(led4,LOW);
+    digitalWrite(led5,LOW);
+    digitalWrite(led6,LOW);  
+  }
+}
