@@ -33,8 +33,6 @@ Juego #4: Su propio diseño de juego.
  * 
  */
 
-
- 
  const int led1=8; //variable constante (recomendable)
  const int led2=9; //variable constante (recomendable)
  const int led3=10; //variable constante (recomendable)
@@ -59,7 +57,6 @@ void setup() {
   pinMode(sw1,INPUT); //pin 5 como entrada
   pinMode(sw2,INPUT); //pin 6 como entrada
   pinMode(sw3,INPUT); //pin 7 como entrada
-
 }
 
 void loop() {
