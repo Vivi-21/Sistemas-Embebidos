@@ -1,0 +1,230 @@
+/*
+  UTN/FICA/CITEL/SISTEMAS EMBEBIDOS
+  DEBER N°3
+  Viviana Yucailla
+  Realizar un programa de juego de preguntas. Se debe tener mínimo 8 preguntas que deben observarse en orden aleatorio.
+  La forma de visualización es por medio de comunicación serial. Su respuesta solo debe ser "SI" y "NO" ingresadas de la misma forma por comunicación serial.
+  Al final de mostrar solo 5 de las 8 preguntas. Se presentan el puntaje (respuestas acertadas) en un display.
+
+Preguntas extraídas de:
+  https://psicologiaymente.com/miscelanea/preguntas-cultura-general
+*/
+
+//variables a declarar
+long randomNumber; //Variable donde almacenaremos el numero aleatorio
+int p = 0;
+String dato;
+String resp1 = "si"; // variable de respuerta a las preguntas
+String resp2 = "no"; // variable de respuerta a las preguntas
+int resp = 0;
+int aleatorio = 1;
+
+//Función de inicialización
+void setup() {
+
+  Serial.begin(9600);
+  pinMode(2, OUTPUT);  //pin display
+  pinMode(3, OUTPUT); //pin display
+  pinMode(4, OUTPUT); //pin display
+  pinMode(5, OUTPUT); //pin display
+  pinMode(6, OUTPUT); //pin display
+  pinMode(7, OUTPUT); //pin display
+  pinMode(8, OUTPUT); //pin display
+  Serial.println("DEBER 3 - Yucailla Viviana");
+  Serial.println("Trivia de Preguntas");
+  Serial.println("Intrucciones: conteste si o no");
+  Serial.println();
+}
+
+void loop() {
+  delay(1000);
+  if (aleatorio == 1) {
+    aleatorio = 0;
+    int randomNumber;
+    int j;
+    for (j = 0; j < 5; j++) {
+      delay(500);
+      randomNumber = random(1, 9); // Genera un numero aleatorio entre 1 y 9
+      Serial.println(String("Pregunta N. ") + int(randomNumber)); //(String("Usted contesto: ")+String(resp)+String(" preguntas correctas"));
+      if (randomNumber == 1) { //num==1
+        delay(500);
+        Serial.println("La Antartida es el lugar mas frio de la tierra?");
+        delay(4000);
+        if (Serial.available() > 0) {
+          dato = Serial.readString(); // se lee el dato
+          Serial.println();
+          if (dato == resp1) {
+            Serial.println("Correcto");
+            p++;
+          }
+          else
+            Serial.println("Incorrecto");
+          dato = "";
+          Serial.println("");
+        }
+        Serial.println("");
+      }
+      if (randomNumber == 2) {
+        delay(500);
+        Serial.println("La Odisea fue escrito por Homero?");
+        delay(4000);
+        if (Serial.available() > 0) {
+          dato = Serial.readString();
+          Serial.println();
+          if (dato == resp1) {
+            Serial.println("Correcto");
+            p++;
+          } else
+            Serial.println("Incorrecto");
+          dato = "";
+          Serial.println("");
+        }
+        Serial.println("");
+      }
+      if (randomNumber == 3) {
+        delay(500);
+        Serial.println("El rio mas largo del mundo es el Amazonas?");
+        delay(4000);
+        if (Serial.available() > 0) {
+          dato = Serial.readString();
+          Serial.println();
+          if (dato == resp1) {
+            Serial.println("Correcto");
+            p++;
+          } else
+            Serial.println("Incorrecto");
+          dato = "";
+          Serial.println("");
+        }
+        Serial.println("");
+      }
+      if (randomNumber == 4) {
+        delay(500);
+        Serial.println("La bandera de Mexico esta compuesta por tres colores: verde, blanco y rojo?");
+        delay(4000);
+        if (Serial.available() > 0) {
+          dato = Serial.readString();
+          Serial.println();
+          if (dato == resp1) {
+            Serial.println("Correcto");
+            p++;
+          } else
+            Serial.println("Incorrecto");
+          dato = "";
+          Serial.println("");
+        }
+        Serial.println("");
+      }
+      if (randomNumber == 5) {
+        delay(500);
+        Serial.println("La II Guerra Mundial finalizo en 1945?");
+        delay(4000);
+        if (Serial.available() > 0) {
+          dato = Serial.readString();
+          Serial.println();
+          if (dato == resp1) {
+            Serial.println("Correcto");
+            p++;
+          } else
+            Serial.println("Incorrecto");
+          dato = "";
+          Serial.println("");
+        }
+        Serial.println("");
+      }
+      if (randomNumber == 6) {
+        delay(500);
+        Serial.println("Ecuador es un pais latinoamericano?");
+        delay(4000);
+        if (Serial.available() > 0) {
+          dato = Serial.readString();
+          Serial.println();
+          if (dato == resp1) {
+            Serial.println("Correcto");
+            p++;
+          } else
+            Serial.println("Incorrecto");
+          dato = "";
+          Serial.println("");
+        }
+        Serial.println("");
+      }
+      if (randomNumber == 7) {
+        delay(500);
+        Serial.println("La cartografia es la ciencia que estudia los mapas?");
+        delay(4000);
+        if (Serial.available() > 0) {
+          dato = Serial.readString();
+          Serial.println();
+          if (dato == resp1) {
+            Serial.println("Correcto");
+            p++;
+          } else
+            Serial.println("Incorrecto");
+          dato = "";
+          Serial.println("");
+        }
+        Serial.println("");
+      }
+      if (randomNumber == 8) {
+        delay(500);
+        Serial.println("La fecha en la que Cristóbal Colon llego a America es en 1492?");
+        delay(4000);
+        if (Serial.available() > 0) {
+          dato = Serial.readString();
+          Serial.println();
+          if (dato == resp1) {
+            Serial.println("Correcto");
+            p++;
+          } else
+            Serial.println("Incorrecto");
+          dato = "";
+          Serial.println("");
+        }
+        Serial.println("");
+      }
+      //resultado de las preguntas en el display
+      if (resp == '0') { // si hay 0 respuestas correctas
+        display (1, 1, 1, 1, 1, 1, 0);
+      }
+
+      if (resp == '1') { // si hay 1 respuesta correctas
+        display (0, 1, 1, 0, 0, 0, 0);
+      }
+      if (resp == '2') { // si hay 2 respuestas correctas
+        display (1, 1, 0, 1, 1, 0, 1);
+      }
+      if (resp == '3') { // si hay 3 respuestas correctas
+        display (1, 1, 1, 1, 0, 0, 1);
+      }
+      if (resp == '4') { // si hay 4 respuestas correctas
+        display (0, 1, 1, 0, 0, 1, 1);
+      }
+      if (resp == '5') { // si hay 5 respuestas correctas
+        display (1, 0, 1, 1, 0, 1, 1);
+      }
+      if (resp == '6') { // si hay 6 respuestas correctas
+        display (1, 0, 1, 1, 1, 1, 1);
+      }
+      if (resp == '7') { // si hay 7 respuestas correctas
+        display (1, 1, 1, 0, 0, 0, 0);
+      }
+      if (resp == '8') { // si hay 8 respuestas correctas
+        display (1, 1, 1, 1, 1, 1, 1);
+      }
+    }
+    Serial.println(String("Usted contesto: ") + String(p) + String("/5 preguntas correctas"));
+  }
+}
+
+//creación de bucle para el display
+void display (int a, int b, int c, int d, int e, int f, int g)// Función del display
+{
+  digitalWrite (2, a);
+  digitalWrite (3, b);
+  digitalWrite (4, c);
+  digitalWrite (5, d);
+  digitalWrite (6, e);
+  digitalWrite (7, f);
+  digitalWrite (8, g);
+}
