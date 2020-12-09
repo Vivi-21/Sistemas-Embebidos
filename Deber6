@@ -89,7 +89,7 @@ void alarma() {   //bucle de alarma
       break;
 
     case 3:
-      Serial.println("2. Borrar alarma");
+      Serial.println("2. Alarma OFF");
       lcd.clear();
       on1 = 0;
       n = 0;
@@ -113,12 +113,12 @@ void configuracion() {   //bucle de configuracion de alarma
         break;
 
       case 2:
-        Serial.println("Alarma guardada");
+        Serial.println("Alarma ON");
         on2++;
         break;
 
       case 3:
-        Serial.println("Borrar Alarma");
+        Serial.println("ALARMA OFF");
         on2 = 0;
         break;
     }
