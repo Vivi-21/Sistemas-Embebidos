@@ -1,0 +1,56 @@
+/*
+ * Deber 7
+ * Yucailla Viviana
+ */
+
+#include <EEPROM.h>
+
+//declaracion de variables
+String opc;  
+String dato;  
+String newcontr;  
+int contr2;  
+int i=0; 
+int cad;  
+int contr = 4563;  // contraseña establecida
+
+  
+void setup() {
+  Serial.begin(9600);
+  EEPROM.get(0,contr);  //Asegurar el valor inicial en la memoria
+  Serial.println("Sistema ON");
+  Serial.println("Ingrese la contrasenia:");
+}
+
+void loop() {
+  if(Serial.available()>0){
+    dato = Serial.readString();  
+    cad = dato.toInt();     
+    if(newcontr==cad){     
+      Serial.println("    ");
+      Serial.println("Contrasenia OK");
+      Serial.println("Desea cambiar contrasenia?  (si/no)");
+      delay(1500);
+      opc = Serial.readString();
+      if(opc=="si"){    
+        Serial.println("    ");
+        Serial.println("Ingrese nueva contrasenia");
+        delay(1500);
+        newcontr = Serial.readString();   
+        contr2 = newcontr.toInt();
+        contr = contr2;      
+        EEPROM.update(0,contr);   //Actualiza contraseña
+        Serial.println("    ");
+        Serial.println("Contrasenia cambiada!");
+      }
+      else{
+        Serial.println("    ");
+        Serial.println("Contrasenia no cambiada!");
+      }
+    }
+    else{
+      Serial.println("    ");
+      Serial.println("Contrasenia incorrecta!!");
+    }
+  }
+}
