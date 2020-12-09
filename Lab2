@@ -1,0 +1,272 @@
+/*
+   LABORATORIO 2
+   Yucailla Viviana
+*/
+
+#include <MsTimer2.h>      //Libreria Timer2
+#include <LiquidCrystal.h>     //Libreria de la LCD
+
+LiquidCrystal lcd(13, 12, 11, 10, 9, 8); //Pines de la LCD
+
+
+int cHora;    //variable para cambio de horas del potenciometro
+int cMin;     //variable para cambio de minutos del potenciometro
+int horas = 0;    //Variable de las horas
+int minutos = 0;    //Variable de los minutos
+
+int a = 0;     //Variable aleatoria;
+int n = 0;     //contador;
+int on1 = 0;    //contador de la interrupción 1
+int on2 = 0;    //contador de la interrupción 2
+//pines para led
+const int led1 = 4;
+const int led2 = 5;
+const int led3 = 6;
+const int led4 = 7;
+//pines para el sensor
+const int sd1 = A2;
+const int sd2 = A3;
+const int sd3 = A4;
+const int sd4 = A5;
+//String para el estado del sensor (activado/desactivado)
+String act1;
+String act2;
+String act3;
+String act4;
+
+
+void setup() {
+  Serial.begin(9600);
+  lcd.begin(16, 4);
+  pinMode(sd1, INPUT);
+  pinMode(sd2, INPUT);
+  pinMode(sd3, INPUT);
+  pinMode(sd4, INPUT);
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+  attachInterrupt(1, modos, LOW);
+  attachInterrupt(0, inicio, LOW);
+  MsTimer2::set(1000, reloj);
+}
+
+void loop() {
+
+}
+
+void inicio() {   //Interrupción 1
+  switch (on1) {
+    case 0:    // Modo 1
+      lcd.display();
+      lcd.setCursor(0, 0);
+      lcd.print("SYSTEM DOMOTICO");
+      lcd.setCursor(0, 1);
+      lcd.print("HORA: ");
+      lcd.setCursor(0, 2);
+      lcd.print("***SISTEMA ON***");
+      MsTimer2::start();   //Iniciar el Reloj
+      on1 = 1;
+      Serial.println("*******SISTEMA  ON*******");
+      break;
+
+    case 1:    // Modo 2
+      lcd.setCursor(12, 2);
+      lcd.print("    ");
+      lcd.setCursor(0, 0);
+      lcd.print("SYSTEM DOMOTICO");
+      lcd.setCursor(0, 1);
+      lcd.print("HORA: ");
+      lcd.setCursor(0, 2);
+      lcd.print("INICIO MODOS:");
+      on1 = 2;
+      break;
+
+    case 2:    //Modo 3
+      lcd.setCursor(0, 0);
+      lcd.print("SYSTEM DOMOTICO");
+      lcd.setCursor(0, 1);
+      lcd.print("**SISTEMA  OFF**");
+      lcd.setCursor(0, 2);
+      lcd.print(" ");
+      horas = 0;
+      minutos = 0;
+      on1 = 0;
+      on2 = 0;
+      MsTimer2::stop();    //Detener el sistema
+      lcd.clear();
+      lcd.noDisplay();
+      Serial.println("*******SISTEMA  OFF*******");
+      break;
+  }
+}
+
+void modos() {    //Interrupción 2
+  if (on1 == 2) {
+    switch (on2) {
+      case 0:   //Modo 1
+        lcd.setCursor(12, 3);
+        lcd.print("    ");
+        lcd.setCursor(0, 3);
+        lcd.print("MODO 1: LUCES");
+        on2 = 1;
+        break;
+
+      case 1:   //Modo 2
+        lcd.setCursor(14, 3);
+        lcd.print("    ");
+        lcd.setCursor(0, 3);
+        lcd.print("                ");
+        lcd.setCursor(0, 3);
+        lcd.print("MODO 2: RELOJ");
+        on2 = 2;
+        break;
+
+      case 2:   //Modo 3
+        lcd.setCursor(0, 3);
+        lcd.print("                ");
+        lcd.setCursor(0, 3);
+        lcd.print("MODO 3: SENSORES");
+        on2 = 3;
+        break;
+
+      default:    //Reiniciar
+        on2 = 0;
+
+        break;
+    }
+  }
+}
+
+void luces() {  //bucle para encender aleatoriamente las luces
+  if (on2 == 1) {  //Modo 1 de la interrupcion 2
+    if (n <= 20) { //20 segundos de duración
+      n++;   //contador
+      a = random(1, 4); //numero random para encender los leds
+      switch (a) {
+        case 1:
+          digitalWrite(led1, HIGH);
+          break;
+
+        case 2:
+          digitalWrite(led2, HIGH);
+          break;
+
+        case 3:
+          digitalWrite(led3, HIGH);
+          break;
+
+        case 4:
+          digitalWrite(led4, HIGH);
+          break;
+
+        case 5:
+          digitalWrite(led1, LOW);
+          break;
+
+        case 6:
+          digitalWrite(led2, LOW);
+          break;
+
+        case 7:
+          digitalWrite(led3, LOW);
+          break;
+
+        case 8:
+          digitalWrite(led4, LOW);
+          break;
+      }
+    }
+  }
+}
+
+void reloj() {
+  if (on1 == 1 || on1 == 2) {
+
+    if (minutos < 59)
+      minutos++;
+    else {
+      minutos = 0;
+      if (horas < 23)
+        horas++;
+      else
+        horas = 0;
+    }
+
+    if (on2 == 1)
+      luces();
+    else {
+      n = 0;
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
+      digitalWrite(led3, LOW);
+      digitalWrite(led4, LOW);
+    }
+    if (on2 == 2)
+      cambioHora();
+    if (on2 == 3)
+      impSensores(); 
+    impReloj();
+  }
+}
+
+void impReloj() {
+  lcd.setCursor(7, 1);
+  lcd.print("00:00");
+  if (horas < 10) {
+    lcd.setCursor(8, 1);
+    lcd.print(horas);
+  }
+  else {
+    lcd.setCursor(7, 1);
+    lcd.print(horas);
+  }
+  if (minutos < 10) {
+    lcd.setCursor(11, 1);
+    lcd.print(minutos);
+  }
+  else {
+    lcd.setCursor(10, 1);
+    lcd.print(minutos);
+  }
+}
+
+void cambioHora() {
+  cHora = analogRead(0);   //cambia hora
+  cHora = map(cHora , 0 , 1023 , 0 , 23);  //Función de cambio de rango
+  horas = cHora;
+  cMin = analogRead(1);   //cambia minuto
+  cMin = map(cMin , 0 , 1023 , 0 , 59); 
+  minutos = cMin;
+}
+
+void impSensores() {
+  if (digitalRead(sd1) == HIGH) {
+    act1 = "Sensor 1: ACTIVADO";
+  }
+  else
+    act1 = "Sensor 1: DESACTIVADO";
+  if (digitalRead(sd2) == HIGH) {
+    act2 = "Sensor 2: ACTIVADO";
+  }
+  else
+    act2 = "Sensor 2: DESACTIVADO";
+  if (digitalRead(sd3) == HIGH) {
+    act3 = "Sensor 3: ACTIVADO";
+  }
+  else
+    act3 = "Sensor 3: DESACTIVADO";
+  if (digitalRead(sd4) == HIGH) {
+    act4 = "Sensor 4: ACTIVADO";
+  }
+  else
+    act4 = "Sensor 4: DESACTIVADO";
+    
+  Serial.println("SISTEMA DE SEGURIDAD CON SENSORES");
+  Serial.println(" ");
+  Serial.println(act1);
+  Serial.println(act2);
+  Serial.println(act3);
+  Serial.println(act4);
+  Serial.println(" ");
+}
