@@ -1,0 +1,60 @@
+/*
+ * Deber 5 
+ * Viviana Yucailla
+ */
+
+#include<Servo.h>
+
+Servo servo;     //Objeto para servo 
+
+String dato="";  
+int giro=0;
+int on=0;
+ 
+void setup() {
+  servo.attach(3);    //Pin del servomotor
+  servo.write(0);   //Empezar motor en 0;
+  Serial.begin(9600);
+  attachInterrupt(0,menu,LOW);
+  Serial.println("            BIENVENIDO           ");
+  Serial.println("Presione el boton para comenzar");
+}
+
+void loop() {
+  if(on==2){
+    if(Serial.available()>0){
+      dato= Serial.readString();    //se lee el dato
+      giro = dato.toInt();       // convierto a int
+    }
+    if(giro<180){
+      servo.write(giro);   //el servo gira lo indicado
+    }
+    else{
+      Serial.println("El angulo sobrepasa giro de 180 grados");
+    }
+    delay(20);
+  }
+}
+
+void menu(){    //bucle de interrupcion
+  switch(on){    //modos
+    case 0: //modo 1 para sistema encendido
+      Serial.println("Modo 1: Sistema ON");    //modo 1
+      on++;
+    break;
+    
+    case 1: //modo 2 para giro de servo
+      Serial.println("Modo 2: Ingrese valor del 0 al 180");   //modo2
+      on++;
+    break;
+    
+    case 2: //modo 3 para sistema apagado
+      Serial.println(" ");
+      Serial.println("Modo 3: Sistema OFF");     //modo 3
+      on=0;   
+      dato="";    
+      giro=0;    
+      servo.write(0);     //Reinicia las variables
+    break;   
+  }
+}
