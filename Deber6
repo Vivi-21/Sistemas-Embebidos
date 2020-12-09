@@ -1,0 +1,168 @@
+/*
+   Deber 6:
+   Yucailla Viviana
+*/
+
+#include <MsTimer2.h>          //Libreria Timer 2
+#include <LiquidCrystal.h>     // Librería LCD
+
+LiquidCrystal lcd (13, 12, 11, 10, 9, 8);
+
+//Declaracion de variables
+String dato1;   //String para cx
+String dato2;   //String para cx
+int on1 = 0; //Contador interrupcion 1
+int on2 = 0; //Contador interrupcion 2
+int on3 = 0; //Contador interrupcion 3
+int hourA;     //Horas de alarma
+int minuteA;     //Minutos de Alarma
+int n = 0;  //Contador
+int minutos = 0; //Minutos del reloj
+int horas = 0;  //Horas del reloj
+
+void setup() {
+  Serial.begin(9600);
+  lcd.begin(16, 4);
+  lcd.setCursor(0, 0);
+  lcd.print("SISTEMA ALARMA");
+  lcd.setCursor(0, 1);
+  lcd.print("HORA: ");
+  attachInterrupt(0, alarma, LOW);
+  attachInterrupt(1, configuracion, LOW);
+  attachInterrupt(1, reloj, LOW);
+  MsTimer2::set(1000, reloj);
+  MsTimer2::start();
+}
+
+void loop() {
+  if (on1 == 2) { //Modo 1 interrupcion 1
+    if (on2 == 1) { //Modo 1 interrupción 2
+      if (Serial.available() > 0) {
+        dato1 = Serial.readString();   //Recibir string cx
+      }
+    }
+    hourA = dato1.toInt();  //Hora de la alarma
+    if (on2 == 2) { //Modo 2 interrupción 2
+      if (Serial.available() > 0) {
+        dato2 = Serial.readString();    //Recibir string cx
+      }
+    }
+    minuteA = dato2.toInt();    //Minutos de la alarma
+
+    if (on2 == 3) { 
+      if (n < 1) { //la alarma se visualiza en el LCD
+        Serial.print(String("ALARMA: ") + String(hourA) + String(":") + String(minuteA));
+        lcd.setCursor(0, 2);
+        lcd.print(String("ALARMA: ") + String(hourA) + String(":") + String(minuteA));
+        n++;
+      }
+    }
+  }
+
+  if (on1 == 4) { //Modo 3 interrupcion 1
+    if (hourA == horas && minuteA == minutos) {  //Comparar alarma al reloj
+      lcd.setCursor(0, 3);
+      lcd.print("ALARMA ON");
+    }
+  }
+}
+
+
+void alarma() {   //bucle de alarma
+  switch (on1) {
+    case 0:
+      Serial.println("SISTEMA ON");
+      Serial.println(" ");
+      Serial.println("1. Configuracion de alarma");
+      Serial.println("2. Configuracion de reloj");
+      on1++;
+      break;
+
+    case 1:
+      Serial.println("1. Configurar alarma");
+      on1++;
+      break;
+
+    case 2:
+      Serial.println("2. Configurar reloj");
+      on1++;
+      break;
+
+    case 3:
+      Serial.println("2. Borrar alarma");
+      lcd.clear();
+      on1 = 0;
+      n = 0;
+      break;
+  }
+}
+
+
+
+void configuracion() {   //bucle de configuracion de alarma
+  if (on1 == 2) {
+    switch (on2) {
+      case 0:
+        Serial.println("Ingrese las horas: ");
+        on2++;
+        break;
+
+      case 1:
+        Serial.println("Ingrese los minutos: ");
+        on2++;
+        break;
+
+      case 2:
+        Serial.println("Alarma guardada");
+        on2++;
+        break;
+
+      case 3:
+        Serial.println("Borrar Alarma");
+        on2 = 0;
+        break;
+    }
+  }
+}
+
+void impReloj() {   //Método para imprimir en la lcd
+  lcd.setCursor(7, 1);
+  lcd.print("00:00");
+  if (horas < 10) {
+    lcd.setCursor(8, 1);
+    lcd.print(horas);
+  }
+  else {
+    lcd.setCursor(7, 1);
+    lcd.print(horas);
+  }
+  if (minutos < 10) {
+    lcd.setCursor(11, 1);
+    lcd.print(minutos);
+  }
+  else {
+    lcd.setCursor(10, 1);
+    lcd.print(minutos);
+  }
+}
+
+
+void reloj() {  //Reloj con Timer2
+
+  if (on1 == 3){
+    if (minutos < 59){
+      Serial.println("Ingrese las horas: ");
+  minutos++;
+  }
+  else {
+    minutos = 0;
+    if (horas < 23){
+      Serial.println("Ingrese los minutos: ");
+    horas++;
+    }
+    else
+      horas = 0;
+  }
+  impReloj();
+}
+}
