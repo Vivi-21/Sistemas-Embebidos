@@ -1,0 +1,58 @@
+/*UTN/FICA/CITEL/SISTEMAS EMBEBIDOS
+Nombre: Viviana Yucailla
+Realice una interfaz que permita mover una esfera por toda la pantalla mediante teclas
+*/
+
+
+float x=450;
+float y=300;
+
+void setup(){
+  size(900,600);  // (ancho, alto)   (displayWidth,displayHeight)  P3D: Tercera dimensión
+  background(81,84,183);  // color de fondo RGB y en hexadecimal---> #5154B7
+} 
+
+void draw(){
+  textSize(25); // tamaño de letra
+  fill(255); // color de letras blanco
+  text("SISTEMAS EMBEBIDOS ",300,30);
+  text("VIVIANA YUCAILLA",320,60);
+  strokeWeight(3); //ancho de línea
+  stroke(255); // linea de color blanco
+  fill(214,82,166); // relleno de figura, en hexadecimal ----> #D652A6
+  ellipse(x,y,60,60); //centro,ancho y altura
+} 
+
+void keyPressed(){
+  switch(keyCode){
+    
+    case '8': // movimiento hacia arriba
+      if(y>0){
+        y=y-10;
+      }
+      else
+        y=10;
+    break;
+    
+    case '2': // movimiento hacia abajo
+      if(y<600)
+        y=y+10;
+      else
+        y=590;
+    break;
+    
+    case '4': // movimiento hacia la izquierda
+      if(x>0)
+        x=x-10;
+      else
+        x=10;
+    break;
+    
+    case '6': // movimiento hacia la derecha
+      if(x<900)
+        x=x+10;
+      else
+        x=890;
+    break;  
+  }
+} 
