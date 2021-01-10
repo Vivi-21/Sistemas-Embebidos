@@ -8,10 +8,10 @@
 #include <avr/wdt.h>  //Libreria de perro guardian
 #include <MsTimer2.h> // libreria del timer2
 
-int ti=0;
-int tf=1;
+int on = 0; //variable de cambio de configuración/funcionamiento
+int ti=0; // tiempo de inicio
+int tf=1; // tiempo final
 int cont = 0;
-int on = 0;
 int i = 0;
 
 void setup(){
@@ -19,7 +19,7 @@ void setup(){
   Serial.println("COMENCEMOS.....");
   Serial.println(" ");
   MsTimer2::set(1000, reinicio);
-  attachInterrupt(0,menu,LOW);
+  attachInterrupt(0,menu,LOW); // habilita interrupcion 0
 }
 
 void loop() {
@@ -54,7 +54,7 @@ void menu() {
 
 void reinicio() {
   cont++;
-  if (cont==ti){
+  if (cont==ti){ //condicion de configuracion
   wdt_disable(); //funcion wdt_disable(): deshabilita el watchdog
   wdt_enable(WDTO_500MS); //tiempo
   }
