@@ -8,7 +8,7 @@ float x=450;
 float y=300;
 
 void setup(){
-  size(900,600);  // (ancho, alto)   (displayWidth,displayHeight)  P3D: Tercera dimensión
+  size(900,600);  //(ancho,alto)...también puede ir: (displayWidth,displayHeight).... se puede añadir alado de 600---> ,P3D para 3D
   background(81,84,183);  // color de fondo RGB y en hexadecimal---> #5154B7
 } 
 
@@ -17,7 +17,7 @@ void draw(){
   fill(255); // color de letras blanco
   text("SISTEMAS EMBEBIDOS ",300,30);
   text("VIVIANA YUCAILLA",320,60);
-  strokeWeight(3); //ancho de línea
+  strokeWeight(3); //ancho de línea/borde
   stroke(255); // linea de color blanco
   fill(214,82,166); // relleno de figura, en hexadecimal ----> #D652A6
   ellipse(x,y,60,60); //centro,ancho y altura
