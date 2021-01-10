@@ -1,0 +1,61 @@
+/* UTN/FICA/CITEL/SISTEMAS EMBEBIDOS
+   Nombre: Viviana Yucailla
+     - Realice un programa que mediante un conversor análogo-digital se configure el tiempo de reinicio del perro guardián 
+       (tiempos seleccionados por el usuario). 
+     - Envíe mensajes por comunicación serial validando todo el proceso. 
+*/
+
+#include <avr/wdt.h>  //Libreria de perro guardian
+#include <MsTimer2.h> // libreria del timer2
+
+int ti=0;
+int tf=1;
+int cont = 0;
+int on = 0;
+int i = 0;
+
+void setup(){
+  Serial.begin(9600);
+  Serial.println("COMENCEMOS.....");
+  Serial.println(" ");
+  MsTimer2::set(1000, reinicio);
+  attachInterrupt(0,menu,LOW);
+}
+
+void loop() {
+  if(on==1){
+    i = analogRead(0);
+    ti = map(i, 0, 1023, 0, 60);
+    delay(50);
+    if (tf!=ti){
+      Serial.println(String("Tiempo de reinicio: ")+String(ti));  
+    }
+    tf = ti;
+  }
+}
+
+
+void menu() {
+  switch(on){
+    case 0:
+      Serial.println("SISTEMA ON");
+      Serial.println("Configure el tiempo en el que desea reiniciar el sistema: ");
+      on++;
+    break;
+    
+    case 1:
+      Serial.println(String("El sistema se reiniciara en: ")+String(ti)+String(" segundos"));
+      Serial.println(" ");
+      MsTimer2::start(); // inicia Timer 2
+      on=0;
+    break;
+  }
+}
+
+void reinicio() {
+  cont++;
+  if (cont==ti){
+  wdt_disable(); //funcion wdt_disable(): deshabilita el watchdog
+  wdt_enable(WDTO_500MS); //tiempo
+  }
+}
