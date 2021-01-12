@@ -1,0 +1,63 @@
+/*  UTN/FICA/CITEL
+   Nombre: Viviana Yucailla
+   Realizar un código que el sistema se reinicia cada minuto, active el conversor análogo-digital realice una lectura y vuelve el sistema a un modo sleep.
+*/
+
+#include<MsTimer2.h> // librería timer 2
+#include<avr/power.h> // librería power
+#include<avr/sleep.h> // librería sleep
+#include<avr/wdt.h> // librería whatchdog
+
+int on = 0; // variable de encendido y modos del sistema
+int tiempo = 0; // varaible de selección de tiempo para toma de datos
+int cont = 0; // conteo de timer 2
+
+void setup() {
+  Serial.begin(9600); //inicia cx serial
+  MsTimer2::set(1000,reloj); // configura timer 2 
+  attachInterrupt(0,activacion,LOW);
+}
+
+void loop() {
+  delay(1000);
+}
+
+void activacion(){ // rutina de interrupción 0
+  switch(on){
+    case 0: // caso de activación
+      tiempo = 60;
+      Serial.println("EMPECEMOS...");
+      Serial.println("SISTEMA ON");
+      MsTimer2::start(); // activa timer
+      on++;
+    break;
+
+    case 1: // sistema apagado
+      Serial.println("SISTEMA OFF");
+      Serial.println(" ");
+      tiempo = 0;
+      on = 0;
+      cont = 0;
+      MsTimer2::stop(); // detiene timer
+      power_adc_disable(); // deshabilidad adc
+    break;
+  }
+}
+
+void reloj(){ // rutina de timer 2
+  if(cont != 1){
+    power_adc_disable(); // deshabilidad adc
+  }
+  else{
+    power_adc_enable(); // habilita adc
+    delay(10);
+    Serial.println(String("Lectura en: ")+String(analogRead(0))); // mensaje de tiempo
+  }
+
+  if(cont == tiempo){
+    cont = 0; // contador a cero
+  }
+  
+  cont++; // cuenta cada segundo
+  power_adc_disable();  // deshabilidad adc  
+}
